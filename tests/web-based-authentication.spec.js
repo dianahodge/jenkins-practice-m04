@@ -1,23 +1,22 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-test('Bypass authentication by embedding the credentials in the URL', async ({ page }) => {
-
-    //https://the-internet-5chk.onrender.com/basic_auth
-    await page.goto("https://the-internet-5chk.onrender.com/basic_auth");
-
-    await page.waitForTimeout(3000);
-
-  
+test.skip('Bypass authentication by embedding the credentials in the URL (deprecated)', async ({ page }) => {
+  await page.goto('https://the-internet-5chk.onrender.com/basic_auth');
 });
 
-test('Bypass authentication by encoding the credentials base64 format', async ({ page }) => {
-    
-    let encodedCredential = Buffer.from("admin:admin").toString("base64");
+test('Bypass authentication using Base64', async ({ page }) => {
+  const username = process.env.PRACTICE_USERNAME;
+  const password = process.env.PRACTICE_PASSWORD;
 
-    await page.setExtraHTTPHeaders({'Authorization': `Basic ${encodedCredential}`});
+  const encodedCredential = Buffer
+    .from(`${username}:${password}`)
+    .toString('base64');
 
-    page.goto("https://the-internet-5chk.onrender.com/basic_auth");
+  await page.setExtraHTTPHeaders({
+    Authorization: `Basic ${encodedCredential}`
+  });
 
-    await page.waitForTimeout(3000);
+  await page.goto('https://the-internet-5chk.onrender.com/basic_auth');
 
+  await expect(page.locator('p')).toContainText('Congratulations');
 });
