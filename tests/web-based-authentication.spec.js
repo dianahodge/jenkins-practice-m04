@@ -1,19 +1,13 @@
 import { test, expect } from '@playwright/test';
 
-test.skip('Bypass authentication by embedding the credentials in the URL (deprecated)', async ({ page }) => {
-  await page.goto('https://the-internet-5chk.onrender.com/basic_auth');
-});
-
 test('Bypass authentication using Base64', async ({ page }) => {
-  const username = process.env.PRACTICE_USERNAME;
-  const password = process.env.PRACTICE_PASSWORD;
+  const username = 'admin';
+  const password = 'admin';
 
-  const encodedCredential = Buffer
-    .from(`${username}:${password}`)
-    .toString('base64');
+  const encodedCredentials = Buffer.from(`${username}:${password}`).toString('base64');
 
   await page.setExtraHTTPHeaders({
-    Authorization: `Basic ${encodedCredential}`
+    Authorization: `Basic ${encodedCredentials}`,
   });
 
   await page.goto('https://the-internet-5chk.onrender.com/basic_auth');

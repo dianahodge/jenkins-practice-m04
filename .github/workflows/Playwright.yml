@@ -31,12 +31,10 @@ jobs:
       - name: Install Playwright Chromium browser
         run: npx playwright install --with-deps chromium
 
-      - name: Configure environment variables from secrets
-        run: |
-          echo PRACTICE_USERNAME=${{ secrets.PRACTICE_USERNAME }}>> .env
-          echo PRACTICE_PASSWORD=${{ secrets.PRACTICE_PASSWORD }}>> .env
-
       - name: Run Playwright tests
+        env:
+          PRACTICE_USERNAME: ${{ secrets.PRACTICE_USERNAME }}
+          PRACTICE_PASSWORD: ${{ secrets.PRACTICE_PASSWORD }}
         run: npx playwright test
 
       - name: Upload Playwright HTML report
